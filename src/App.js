@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Board from './components/Board';
 import History from './components/History';
+import Status from './components/Status';
 import './style/root.css';
 import calculateWinner from './winner';
 const App = () => {
@@ -16,10 +17,7 @@ const App = () => {
   ]);
   const [currentMove, setCurrentMove] = useState(0);
   const current = history[currentMove];
-  const winner = calculateWinner(current.board);
-  const message = winner
-    ? `Winner is ${winner}`
-    : `Playing for ${xturn ? 'X' : '0'}`;
+  const {winner,winningsq} = calculateWinner(current.board);
   const handleclick = position => {
     if (current.board[position] || winner || (history.length-1)!=currentMove) {
       return;
@@ -39,13 +37,24 @@ const App = () => {
     });
     setCurrentMove(prev=>prev+1);
   };
+const NewGame = () =>{
+  setHistory([
+    {
+      board: Array(9).fill(null),
+      xturn: xturn,
+    },
+  ])
+  setCurrentMove(0)
+}
  const moveTo = (move) => setCurrentMove(move);
   return (
     <div className="app">
-      <h1>TIC TAC TOE</h1>
-      <h3>{message}</h3>
-      <Board board={current.board} handleclick={handleclick} />
+      <h1>TIC <span className="text-green"> TAC </span> TOE</h1>
+      <Status current={current} winner={winner} currentMove={currentMove}/>
+      <Board board={current.board} handleclick={handleclick} winner={winner} winningsq={winningsq}/>
+      <button type='button' onClick={()=>NewGame()} className={`btn-reset ${winner ? 'active':''}`}>New Game</button>
       <History history={history} moveTo={moveTo} currentMove={currentMove}/>
+      <div className='bg-balls'/>
     </div>
   );
 };
