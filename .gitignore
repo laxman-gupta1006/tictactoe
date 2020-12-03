@@ -1,0 +1,5 @@
+node_modules
+dist
+.cache
+.parcel-cache
+Tic_Tac_Toe_Game_Assets
