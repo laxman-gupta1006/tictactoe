@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Board from './components/Board';
+import History from './components/History';
 import './style/root.css';
 import calculateWinner from './winner';
 const App = () => {
+
   const [xturn, setXturn] = useState(
     [true, false][Math.floor(Math.random() * (1 - 0 + 1)) + 0]
   );
@@ -19,7 +21,7 @@ const App = () => {
     ? `Winner is ${winner}`
     : `Playing for ${xturn ? 'X' : '0'}`;
   const handleclick = position => {
-    if (current.board[position] || winner) {
+    if (current.board[position] || winner || (history.length-1)!=currentMove) {
       return;
     }
     setHistory(prev => {
@@ -37,12 +39,13 @@ const App = () => {
     });
     setCurrentMove(prev=>prev+1);
   };
-  console.log(history)
+ const moveTo = (move) => setCurrentMove(move);
   return (
     <div className="app">
       <h1>TIC TAC TOE</h1>
       <h3>{message}</h3>
       <Board board={current.board} handleclick={handleclick} />
+      <History history={history} moveTo={moveTo} currentMove={currentMove}/>
     </div>
   );
 };
